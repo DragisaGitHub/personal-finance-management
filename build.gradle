@@ -31,9 +31,24 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.keycloak:keycloak-spring-boot-starter:25.0.3'
+
+	// Test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	// Testcontainers for PostgreSQL
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
+
+	// JUnit platform
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
+
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
 }
 
 tasks.named('test') {

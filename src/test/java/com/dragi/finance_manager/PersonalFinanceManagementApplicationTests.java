@@ -1,4 +1,4 @@
-package com.dragi.financemanager.personal_finance_management;
+package com.dragi.finance_manager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

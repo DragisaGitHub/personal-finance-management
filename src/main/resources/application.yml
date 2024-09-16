@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: personal-finance-management
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/finance_management
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: finance_schema
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/finance_management
+          jwk-set-uri: http://localhost:9090/realms/finance_management/protocol/openid-connect/certs
+
+keycloak:
+  realm: finance_management
+  auth-server-url: http://localhost:9090
+  resource: finance-management-backend
+  credentials:
+    secret: YOUR_SECRET_HERE
+  bearer-only: true
+  principal-attribute: preferred_username
