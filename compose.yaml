@@ -1,7 +1,7 @@
 services:
   postgres:
     container_name: postgres-pfm
-    image: postgres:latest
+    image: postgres:16
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -28,7 +28,7 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       PFM_DB: postgres
-      PFM_DB_URL: jdbc:postgresql://postgres/${POSTGRES_DB}
+      PFM_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       PFM_DB_USERNAME: ${POSTGRES_USER}
       PFM_DB_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:

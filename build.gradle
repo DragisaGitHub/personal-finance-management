@@ -24,31 +24,42 @@ repositories {
 }
 
 dependencies {
+	// Spring Boot starters
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas:3.3.4'
+
+
+	// Lombok
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'org.keycloak:keycloak-spring-boot-starter:25.0.3'
+
+	// Docker Compose integration (for Spring Boot)
+	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+
+	// PostgreSQL database
+	runtimeOnly 'org.postgresql:postgresql'
+
+	// Keycloak for OAuth2
+	implementation 'org.keycloak:keycloak-spring-boot-starter:25.0.5'
+	implementation 'org.keycloak:keycloak-core:25.0.5'
+
 
 	// Test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-
-	// Testcontainers for PostgreSQL
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
 
-	// JUnit platform
+	// JUnit platform launcher
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// Mockito for testing
 	testImplementation 'org.mockito:mockito-core'
 	testImplementation 'org.mockito:mockito-junit-jupiter'
-
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'org.springframework.security:spring-security-oauth2-jose'
 }
 
 tasks.named('test') {

@@ -1,6 +1,5 @@
 package com.dragi.finance_manager.user;
 
-import com.dragi.finance_manager.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
