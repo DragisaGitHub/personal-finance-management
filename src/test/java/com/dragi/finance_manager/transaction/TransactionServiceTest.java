@@ -2,18 +2,22 @@ package com.dragi.finance_manager.transaction;
 
 import com.dragi.finance_manager.category.Category;
 import com.dragi.finance_manager.enums.TransactionType;
-import com.dragi.finance_manager.user.User;
+import com.dragi.finance_manager.util.HelperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class TransactionServiceTest {
@@ -29,9 +33,6 @@ class TransactionServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("john_doe");
 
         Category category = new Category();
         category.setId(1L);
@@ -43,8 +44,7 @@ class TransactionServiceTest {
         transaction.setAmount(5000);
         transaction.setDate(LocalDate.now());
         transaction.setType(TransactionType.INCOME);
-        transaction.setUser(user);
-        transaction.setCategory(category);  // Added category to transaction
+        transaction.setCategory(category);
     }
 
     @Test
@@ -55,19 +55,28 @@ class TransactionServiceTest {
 
         assertNotNull(createdTransaction);
         assertEquals("Salary", createdTransaction.getDescription());
+        assertEquals(5000, createdTransaction.getAmount());
         assertEquals("Groceries", createdTransaction.getCategory().getName());
+        assertEquals(TransactionType.INCOME, createdTransaction.getType());
         verify(transactionRepository, times(1)).save(transaction);
     }
 
     @Test
-    void shouldGetTransactionsByUserId() {
+    void shouldGetTransactionsByUserName() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn("dragisa");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
-        when(transactionRepository.findByUserId(1L)).thenReturn(transactions);
+        when(transactionRepository.getTransactionsByUsername("dragisa")).thenReturn(transactions);
 
-        List<Transaction> foundTransactions = transactionService.getTransactionsByUserId(1L);
+        List<Transaction> foundTransactions = transactionService.getTransactionsByUsername("dragisa");
 
         assertEquals(1, foundTransactions.size());
-        verify(transactionRepository, times(1)).findByUserId(1L);
+        verify(transactionRepository, times(1)).getTransactionsByUsername("dragisa");
     }
+
 }

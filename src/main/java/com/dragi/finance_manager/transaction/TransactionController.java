@@ -1,13 +1,13 @@
 package com.dragi.finance_manager.transaction;
 
-import org.keycloak.KeycloakPrincipal;
+import com.dragi.finance_manager.util.HelperUtils;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +28,7 @@ public class TransactionController {
     
     @GetMapping("/user")
     public List<EntityModel<Transaction>> getTransactionsForCurrentUser() {
-        String username = getAuthenticatedUsername();
+        String username = HelperUtils.getAuthenticatedUsername();
         List<Transaction> transactions = transactionService.getTransactionsByUsername(username);
 
         return transactions.stream()
@@ -44,15 +44,16 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
-        String username = getAuthenticatedUsername();
+        String username = HelperUtils.getAuthenticatedUsername();
         transaction.setUsername(username);
+        transaction.setDate(LocalDate.now());
         EntityModel<Transaction> entityModel = transactionModelAssembler.toModel(transactionService.createTransaction(transaction));
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(entityModel);
     }
 
-    @PutMapping("/transactions/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<?> replaceTransaction(@RequestBody Transaction newTransaction, @PathVariable Long id) {
 
         Transaction updatedTransaction = transactionService.getTransactionById(id)
@@ -79,21 +80,16 @@ public class TransactionController {
     @GetMapping("/all")
     public CollectionModel<EntityModel<Transaction>> getAllTransactions() {
 
-        List<EntityModel<Transaction>> employees = transactionService.getAllTransactions().stream()
+        List<EntityModel<Transaction>> transactions = transactionService.getAllTransactions().stream()
                 .map(transactionModelAssembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(employees, linkTo(methodOn(TransactionController.class).getAllTransactions()).withSelfRel());
+        return CollectionModel.of(transactions, linkTo(methodOn(TransactionController.class).getAllTransactions()).withSelfRel());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTransaction(@PathVariable Long id) {
         transactionService.deleteTransaction(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private String getAuthenticatedUsername() {
-        KeycloakPrincipal<?> principal = (KeycloakPrincipal<?>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
     }
 }

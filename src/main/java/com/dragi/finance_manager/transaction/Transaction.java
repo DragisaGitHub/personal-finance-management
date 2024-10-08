@@ -2,6 +2,8 @@ package com.dragi.finance_manager.transaction;
 
 import com.dragi.finance_manager.category.Category;
 import com.dragi.finance_manager.enums.TransactionType;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Transaction {
 
     @Id

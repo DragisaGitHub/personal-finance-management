@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - 5432:5432
+      - "5432:5432"
     restart: unless-stopped
     networks:
       - finance_management_network
@@ -41,9 +41,27 @@ services:
     networks:
       - finance_management_network
 
+  ## Flyway Service
+  flyway:
+    container_name: flyway-pfm
+    image: flyway/flyway:latest
+    depends_on:
+      - postgres
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      FLYWAY_USER: ${POSTGRES_USER}
+      FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    networks:
+      - finance_management_network
+    command: -connectRetries=60 migrate
+
   app:
     container_name: app-pfm
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - postgres
       - keycloak
@@ -52,10 +70,10 @@ services:
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
     ports:
-      - '8081:8080'
+      - '8080:8080'
     networks:
       - finance_management_network
-    command: sh -c "java -jar app.jar && ./gradlew test"
+    command: sh -c "java -jar app.jar"
 
 volumes:
   postgres_data:

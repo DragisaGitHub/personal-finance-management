@@ -31,6 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas:3.3.4'
+	implementation 'org.flywaydb:flyway-core:10.19.0'
 
 
 	// Lombok
@@ -44,7 +45,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 
 	// Keycloak for OAuth2
-	implementation 'org.keycloak:keycloak-spring-boot-starter:25.0.5'
+	implementation 'org.keycloak:keycloak-spring-boot-starter:25.0.3'
 	implementation 'org.keycloak:keycloak-core:25.0.5'
 
 
@@ -64,4 +65,8 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+		showStandardStreams = true
+	}
 }

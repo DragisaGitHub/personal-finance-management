@@ -1,36 +1,44 @@
 spring:
+  ## Application Name
   application:
     name: personal-finance-management
 
+  flyway:
+    enabled: false
+
+  ## Datasource (Database Connection Configuration)
   datasource:
     url: jdbc:postgresql://postgres:5432/finance_management
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
 
+  ## JPA and Hibernate Configuration
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
+        boot:
+          allow_jdbc_metadata_access: false
         format_sql: true
         default_schema: finance_schema
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
+
+  ## Security Configuration (OAuth2 with Keycloak)
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:9090/realms/finance_management
-          jwk-set-uri: http://localhost:9090/realms/finance_management/protocol/openid-connect/certs
+  sql:
+    init:
+      mode: never
 
+## Keycloak (OAuth2 Authorization Configuration)
 keycloak:
-  realm: finance_management
+  client-id: finance_management
   auth-server-url: http://localhost:9090
-  resource: finance-management-backend
-  credentials:
-    secret: YOUR_SECRET_HERE
-  bearer-only: true
-  principal-attribute: preferred_username
