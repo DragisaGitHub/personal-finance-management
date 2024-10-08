@@ -34,9 +34,8 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults());
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/public/**").permitAll()
+                .requestMatchers("/**").permitAll()
                 .requestMatchers("/api/transactions/**").hasRole("ADMIN")
-                .requestMatchers("/**").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()  // Protect other endpoints
         ).oauth2ResourceServer(
                 (oauth2) -> oauth2.jwt(jwt -> jwt.decoder(JwtDecoders.fromIssuerLocation(issuerUri))
