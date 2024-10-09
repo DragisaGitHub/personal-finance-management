@@ -13,31 +13,42 @@ services:
     restart: unless-stopped
     networks:
       - finance_management_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   keycloak:
     container_name: keycloak-pfm
     image: quay.io/keycloak/keycloak:25.0.5
     command: start-dev --import-realm
     environment:
-      PFM_HOSTNAME: localhost
-      PFM_HOSTNAME_PORT: 8080
-      PFM_HOSTNAME_STRICT_BACK_CHANNEL: false
-      PFM_HTTP_ENABLED: true
-      PFM_HOSTNAME_STRICT_HTTPS: false
-      PFM_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       PFM_DB: postgres
       PFM_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       PFM_DB_USERNAME: ${POSTGRES_USER}
       PFM_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KC_HTTP_MANAGEMENT_PORT: 9000
+      KC_HTTP_MANAGEMENT_RELATIVE_PATH: /management
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
       - "9090:8080"
+      - "9000:9000"
     restart: always
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "exit 0" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     networks:
       - finance_management_network
 
@@ -46,7 +57,8 @@ services:
     container_name: flyway-pfm
     image: flyway/flyway:latest
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       FLYWAY_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       FLYWAY_USER: ${POSTGRES_USER}
@@ -63,8 +75,10 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - postgres
-      - keycloak
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/finance_management
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
@@ -77,6 +91,8 @@ services:
 
 volumes:
   postgres_data:
+    driver: local
+  keycloak:
     driver: local
 
 networks:

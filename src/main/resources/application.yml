@@ -33,7 +33,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:9090/realms/finance_management
+          issuer-uri: http://keycloak-pfm:8080/realms/finance_management
+
   sql:
     init:
       mode: never
@@ -41,4 +42,4 @@ spring:
 ## Keycloak (OAuth2 Authorization Configuration)
 keycloak:
   client-id: finance_management
-  auth-server-url: http://localhost:9090
+  auth-server-url: http://keycloak-pfm:8080
