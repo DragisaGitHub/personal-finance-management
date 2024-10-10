@@ -8,16 +8,22 @@ spring:
 
   ## Datasource (Database Connection Configuration)
   datasource:
-    url: jdbc:postgresql://postgres:5432/finance_management
+    url: jdbc:postgresql://localhost:5432/finance_management
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000  # 30 seconds
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 600000
+      max-lifetime: 1800000
 
   ## JPA and Hibernate Configuration
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         boot:
@@ -33,13 +39,18 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak-pfm:8080/realms/finance_management
+          issuer-uri: http://localhost:9090/realms/finance_management
 
   sql:
     init:
       mode: never
 
+logging:
+  level:
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.security: DEBUG
+
 ## Keycloak (OAuth2 Authorization Configuration)
 keycloak:
   client-id: finance_management
-  auth-server-url: http://keycloak-pfm:8080
+  auth-server-url: http://localhost:9090
