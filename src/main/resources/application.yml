@@ -47,8 +47,8 @@ spring:
 
 logging:
   level:
-    org.springframework.security.oauth2: DEBUG
-    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: INFO
+    org.springframework.security: INFO
 
 ## Keycloak (OAuth2 Authorization Configuration)
 keycloak:

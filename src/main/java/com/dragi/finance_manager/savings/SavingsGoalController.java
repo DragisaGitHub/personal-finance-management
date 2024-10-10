@@ -39,6 +39,15 @@ public class SavingsGoalController {
                 .body(entityModel);
     }
 
+    @PutMapping("/{id}/add")
+    public ResponseEntity<?> addToGoal(@PathVariable Long id, @RequestParam double amount) {
+        String username = HelperUtils.getAuthenticatedUsername();
+        SavingsGoal updatedGoal = savingsGoalService.addToGoal(id, amount, username);
+        EntityModel<SavingsGoal> entityModel = savingsGoalModelAssembler.toModel(updatedGoal);
+
+        return ResponseEntity.ok(entityModel);
+    }
+
     // Get all savings goals for the current user
     @GetMapping
     public CollectionModel<EntityModel<SavingsGoal>> getUserSavingsGoals() {
