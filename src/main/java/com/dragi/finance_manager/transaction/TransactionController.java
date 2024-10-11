@@ -19,10 +19,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final RecurringTransactionService recurringTransactionService;
     private final TransactionModelAssembler transactionModelAssembler;
 
-    public TransactionController(TransactionService transactionService, TransactionModelAssembler transactionModelAssembler) {
+    public TransactionController(TransactionService transactionService, RecurringTransactionService recurringTransactionService, TransactionModelAssembler transactionModelAssembler) {
         this.transactionService = transactionService;
+        this.recurringTransactionService = recurringTransactionService;
         this.transactionModelAssembler = transactionModelAssembler;
     }
     
@@ -45,6 +47,18 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
         String username = HelperUtils.getAuthenticatedUsername();
+        transaction.setUsername(username);
+        transaction.setDate(LocalDate.now());
+        EntityModel<Transaction> entityModel = transactionModelAssembler.toModel(transactionService.createTransaction(transaction));
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
+    }
+
+    @PostMapping("/recurring")
+    public ResponseEntity<?> createRecurringTransaction(@RequestBody RecurringTransaction recurringTransaction) {
+        String username = HelperUtils.getAuthenticatedUsername();
+        Transaction transaction = recurringTransactionService.mapToTransaction(recurringTransaction);
         transaction.setUsername(username);
         transaction.setDate(LocalDate.now());
         EntityModel<Transaction> entityModel = transactionModelAssembler.toModel(transactionService.createTransaction(transaction));
