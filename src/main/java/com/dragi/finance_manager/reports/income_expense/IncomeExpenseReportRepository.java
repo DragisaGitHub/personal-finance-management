@@ -1,4 +1,4 @@
-package com.dragi.finance_manager.reports;
+package com.dragi.finance_manager.reports.income_expense;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

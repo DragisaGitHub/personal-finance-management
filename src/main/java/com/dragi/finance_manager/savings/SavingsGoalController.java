@@ -1,6 +1,8 @@
 package com.dragi.finance_manager.savings;
 
 import com.dragi.finance_manager.util.HelperUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -15,6 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/savings-goals")
+@Tag(name = "Savings Goals", description = "The Savings Goals API")
 public class SavingsGoalController {
 
     private final SavingsGoalService savingsGoalService;
@@ -27,6 +30,7 @@ public class SavingsGoalController {
 
     // Create or update a savings goal
     @PostMapping
+    @Operation(summary = "Create or Update a Savings Goal")
     public ResponseEntity<?> createOrUpdateGoal(@RequestBody SavingsGoal savingsGoal) {
         String username = HelperUtils.getAuthenticatedUsername();
         savingsGoal.setUsername(username);

@@ -1,21 +1,11 @@
 package com.dragi.finance_manager.transaction;
 
-import com.dragi.finance_manager.category.Category;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -29,18 +19,13 @@ public class RecurringTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
-    @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "transaction_id", nullable = false)
+    @JsonBackReference
+    private Transaction transaction;
 
     @Column(name = "frequency", nullable = false)
-    private String frequency; // e.g., "daily", "weekly", "monthly"
+    private String frequency;
 
     @Column(name = "next_occurrence", nullable = false)
     private LocalDate nextOccurrence;
@@ -67,3 +52,4 @@ public class RecurringTransaction {
         updatedAt = LocalDate.now();
     }
 }
+

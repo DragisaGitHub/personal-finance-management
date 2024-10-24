@@ -11,10 +11,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class TransactionModelAssembler implements RepresentationModelAssembler<Transaction, EntityModel<Transaction>> {
 
     @Override
-    public EntityModel<Transaction> toModel(Transaction employee) {
+    public EntityModel<Transaction> toModel(Transaction transaction) {
 
-        return EntityModel.of(employee, //
-                linkTo(methodOn(TransactionController.class).getTransactionById(employee.getId())).withSelfRel(),
+        return EntityModel.of(transaction, //
+                linkTo(methodOn(TransactionController.class).getTransactionById(transaction.getId())).withSelfRel(),
                 linkTo(methodOn(TransactionController.class).getAllTransactions()).withRel("transactions"));
     }
 }

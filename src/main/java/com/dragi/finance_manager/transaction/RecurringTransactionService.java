@@ -1,6 +1,5 @@
 package com.dragi.finance_manager.transaction;
 
-import com.dragi.finance_manager.enums.TransactionType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +17,13 @@ public class RecurringTransactionService {
         this.transactionService = transactionService;
     }
 
-    @Scheduled(cron = "0 0 1 * * *") // Daily at 1 AM
+    @Scheduled(cron = "0 0/1 * * * *")
     public void processRecurringTransactions() {
         List<RecurringTransaction> dueTransactions = recurringTransactionRepository.findByNextOccurrenceBefore(LocalDate.now());
 
         for (RecurringTransaction recurring : dueTransactions) {
-            Transaction transaction = mapToTransaction(recurring);
+            Transaction transaction = recurring.getTransaction();
+            transaction.setDate(LocalDate.now());
             transactionService.createTransaction(transaction);
             recurring.setLastOccurrence(LocalDate.now());
             recurring.setNextOccurrence(calculateNextOccurrence(recurring));
@@ -36,18 +36,6 @@ public class RecurringTransactionService {
         return recurringTransactionRepository.save(recurringTransaction);
     }
 
-    public Transaction mapToTransaction(RecurringTransaction recurringTransaction) {
-        Transaction transaction = new Transaction();
-        transaction.setAmount(recurringTransaction.getAmount().doubleValue());
-        transaction.setDescription("Recurring: " + recurringTransaction.getCategory());
-        transaction.setDate(LocalDate.now());
-        transaction.setUsername("user-" + recurringTransaction.getUserId());
-        transaction.setCategory(recurringTransaction.getCategory());
-        transaction.setType(TransactionType.EXPENSE);
-
-        return transaction;
-    }
-
     private LocalDate calculateNextOccurrence(RecurringTransaction recurringTransaction) {
         return switch (recurringTransaction.getFrequency()) {
             case "daily" -> recurringTransaction.getNextOccurrence().plusDays(1);
@@ -55,6 +43,10 @@ public class RecurringTransactionService {
             case "monthly" -> recurringTransaction.getNextOccurrence().plusMonths(1);
             default -> throw new IllegalArgumentException("Invalid frequency");
         };
+    }
+
+    public void deleteRecurringTransaction(Long id) {
+        recurringTransactionRepository.deleteById(id);
     }
 }
 

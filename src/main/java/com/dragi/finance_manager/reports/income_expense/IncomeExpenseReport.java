@@ -1,4 +1,4 @@
-package com.dragi.finance_manager.savings;
+package com.dragi.finance_manager.reports.income_expense;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,20 +11,14 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "savings_goal")
-public class SavingsGoal {
+public class IncomeExpenseReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
-    private Double targetAmount;
-    private Double currentAmount;
-    private LocalDate targetDate;
-    private boolean completed;
-
-    private String username;
+    private int year;
+    private double totalIncome;
+    private double totalExpense;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDate createdAt;
