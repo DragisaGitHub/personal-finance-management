@@ -33,10 +33,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas:3.3.4'
 	implementation 'org.flywaydb:flyway-core:10.19.0'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+	implementation 'com.itextpdf:itextpdf:5.5.13.4'
+	implementation 'com.itextpdf:html2pdf:5.0.5'
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
 	// Docker Compose integration (for Spring Boot)
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'

@@ -1,7 +1,7 @@
 package com.dragi.finance_manager.savings;
 
 import com.dragi.finance_manager.notification.NotificationService;
-import com.dragi.finance_manager.util.HelperUtils;
+import com.dragi.finance_manager.utils.HelperUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

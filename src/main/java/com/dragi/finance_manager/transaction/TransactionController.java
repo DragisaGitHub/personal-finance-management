@@ -1,11 +1,11 @@
 package com.dragi.finance_manager.transaction;
 
-import com.dragi.finance_manager.util.HelperUtils;
+import com.dragi.finance_manager.utils.HelperUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -73,7 +72,7 @@ public class TransactionController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Update transaction", description = "Update financial transaction for the authenticated user.")
     ResponseEntity<?> replaceTransaction(@RequestBody Transaction newTransaction, @PathVariable Long id) {
 
@@ -100,13 +99,10 @@ public class TransactionController {
 
     @GetMapping("/all")
     @Operation(summary = "Show list of all transactions", description = "Show all financial transactions for the authenticated user.")
-    public CollectionModel<EntityModel<Transaction>> getAllTransactions() {
-
-        List<EntityModel<Transaction>> transactions = transactionService.getAllTransactions().stream()
+    public List<EntityModel<Transaction>> getAllTransactions() {
+        return transactionService.getAllTransactions().stream()
                 .map(transactionModelAssembler::toModel)
                 .collect(Collectors.toList());
-
-        return CollectionModel.of(transactions, linkTo(methodOn(TransactionController.class).getAllTransactions()).withSelfRel());
     }
 
     @DeleteMapping("/{id}")

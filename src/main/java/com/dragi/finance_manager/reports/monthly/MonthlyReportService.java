@@ -1,5 +1,6 @@
 package com.dragi.finance_manager.reports.monthly;
 
+import com.dragi.finance_manager.reports.ReportNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -15,7 +16,13 @@ public class MonthlyReportService {
     }
 
     public Optional<MonthlyReport> getMonthlyReport(int year, int month) {
-        return monthlyReportRepository.findByYearAndMonth(year, month);
+        Optional<MonthlyReport> report = monthlyReportRepository.findByYearAndMonth(year, month);
+
+        if (report.isEmpty()) {
+            throw new ReportNotFoundException(year, month);
+        }
+
+        return report;
     }
 
     public void deleteReport(Long id) {

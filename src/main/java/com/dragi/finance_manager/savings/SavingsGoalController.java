@@ -1,6 +1,6 @@
 package com.dragi.finance_manager.savings;
 
-import com.dragi.finance_manager.util.HelperUtils;
+import com.dragi.finance_manager.utils.HelperUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;

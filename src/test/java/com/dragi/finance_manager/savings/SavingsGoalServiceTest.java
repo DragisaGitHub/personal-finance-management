@@ -1,6 +1,6 @@
 package com.dragi.finance_manager.savings;
 
-import com.dragi.finance_manager.util.HelperUtils;
+import com.dragi.finance_manager.utils.HelperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

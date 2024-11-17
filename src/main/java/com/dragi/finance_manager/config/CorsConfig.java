@@ -25,16 +25,7 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-        config.setAllowedHeaders(Arrays.asList(
-                HttpHeaders.ORIGIN,
-                HttpHeaders.CONTENT_TYPE,
-                HttpHeaders.ACCEPT,
-                HttpHeaders.AUTHORIZATION
-        ));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH"));
+        final CorsConfiguration config = getCorsConfiguration();
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source) {
@@ -52,5 +43,24 @@ public class CorsConfig {
                 LOGGER.info("Response Headers after CORS processing: {}", response.getHeaderNames());
             }
         };
+    }
+
+    private static CorsConfiguration getCorsConfiguration() {
+        final CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+        config.setAllowedHeaders(Arrays.asList(
+                HttpHeaders.ORIGIN,
+                HttpHeaders.CONTENT_TYPE,
+                HttpHeaders.ACCEPT,
+                HttpHeaders.AUTHORIZATION
+        ));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH"));
+        config.setExposedHeaders(Arrays.asList(
+                HttpHeaders.CONTENT_DISPOSITION,
+                HttpHeaders.CONTENT_LENGTH,
+                HttpHeaders.CONTENT_TYPE
+        ));
+        return config;
     }
 }

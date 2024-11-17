@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import com.dragi.finance_manager.reports.ReportNotFoundException;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +40,14 @@ public class MonthlyReportController {
 
     @GetMapping
     @Operation(summary = "Get monthly report", description = "Retrieve a monthly report for a specific year and month.")
-    public EntityModel<MonthlyReport> getMonthlyReport(@RequestParam int year, @RequestParam int month) {
-        MonthlyReport monthlyReport = monthlyReportService.getMonthlyReport(year, month).orElseThrow(() -> new ReportNotFoundException(year, month));
-        return monthlyReportModelAssembler.toModel(monthlyReport);
+    public EntityModel<MonthlyReport> getMonthlyReport(@RequestParam int year, @RequestParam(required = false) Integer month) {
+        if (month != null) {
+            MonthlyReport monthlyReport = monthlyReportService.getMonthlyReport(year, month)
+                    .orElseThrow(() -> new ReportNotFoundException(year, month));
+            return monthlyReportModelAssembler.toModel(monthlyReport);
+        } else {
+            throw new ReportNotFoundException(year);
+        }
     }
+
 }

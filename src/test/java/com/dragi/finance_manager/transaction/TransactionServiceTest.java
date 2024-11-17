@@ -2,7 +2,6 @@ package com.dragi.finance_manager.transaction;
 
 import com.dragi.finance_manager.category.Category;
 import com.dragi.finance_manager.enums.TransactionType;
-import com.dragi.finance_manager.util.HelperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

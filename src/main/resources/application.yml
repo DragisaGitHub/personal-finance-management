@@ -23,7 +23,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         boot:
@@ -54,3 +54,8 @@ logging:
 keycloak:
   client-id: finance_management
   auth-server-url: http://localhost:9090
+
+legic:
+  order-id: 5502417
+  api-base: https://integration.legicconnect.io
+  api-key: api1725344305755UeaNH8AglCZ9Fw==-I514p7kDB2xEPUQgqGeqyTToPaZPA2WoVMNPPtpyECg=

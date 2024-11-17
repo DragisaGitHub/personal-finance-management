@@ -21,7 +21,6 @@ public class RecurringTransaction {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "transaction_id", nullable = false)
-    @JsonBackReference
     private Transaction transaction;
 
     @Column(name = "frequency", nullable = false)
